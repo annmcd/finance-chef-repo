@@ -84,7 +84,6 @@ def doGitUpdate(targetFolder) {
     stringOutputSlit.each(){
         val=it
 		splittedList[b]=val.replaceAll(":" , "").trim()
-		// println splittedList[b]
 		b++
     }
 	splittedList.each(){
