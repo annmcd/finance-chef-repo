@@ -62,7 +62,7 @@ def doFolderCheck(String artefactName){
 Nothing will have been added to the workspace except for the data bag item 
 and possibly the data bag folder under data_bags/
 **/
-def doGitUpdate(targetFolder) {
+def doGitUpdate(targetFolder, artefactName) {
 
 
 	//what is my local branch
@@ -71,43 +71,18 @@ def doGitUpdate(targetFolder) {
 	def branch= p.in.text
 	println("Branch : " + branch) 
 
-
-
-	//we are only interested in the new file that we added 
-	Process p1 = ["cmd", "/c", "git", "status", "|", "grep", "new"].execute()
-	def status = p1.in.text
-
-	stringOutputSlit=status.split("new file:")
-	splittedList=[]
-	//Iterate over the list of new files and pull out the path/name
-	b=0
-    stringOutputSlit.each(){
-        val=it
-		splittedList[b]=val.replaceAll(":" , "").trim()
-		b++
-    }
-	splittedList.each(){
-
-        println "New File to add :"+ it
+    		
 		
-		Process pAdd = ["cmd", "/c", "git", "add", it].execute()
+		Process pAdd = ["cmd", "/c", "git", "add", "--all"].execute()
 		pAdd.waitForProcessOutput(System.out, System.err)
 		
-		Process pCommit = ["cmd", "/c", "git", "commit", "-m", it].execute()
+		Process pCommit = ["cmd", "/c", "git", "commit", "-m", "data bag update " + artefactName].execute()
 		pCommit.waitForProcessOutput(System.out, System.err)
 		
 		Process pPush = ["cmd", "/c", "git", "push", "origin", branch ].execute()
 		pPush.waitForProcessOutput(System.out, System.err)
-	}
-	
-	
-	
 
 	
-	/**
-	p2 = ["cmd", "/c", "git", "add", "--all"].execute()
-	res = p.in.text
-	println "process response=" + res**/
 	
 }
 
@@ -123,7 +98,7 @@ println "New data bag item will be added to repo " + targetFile
 
 //updateDataBag("amd_poc_db", targetFile)
 
-doGitUpdate("C:/WorkspaceMS/github/finance-chef-repo")
+doGitUpdate("C:/WorkspaceMS/github/finance-chef-repo", myArtefact)
 
 
 
